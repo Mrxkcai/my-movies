@@ -1,0 +1,58 @@
+<!--pages/common/movie-list.wxml-->
+<!-- 渲染普通的单项数据 -->
+<template name="item1">
+    <navigator url="../item/item?id={{item.id}}">
+        <view class="item">
+            <image class="poster" src="{{item.images.small}}" />
+            <view class="meta">
+                <text class="title">{{item.title}}</text>
+                <text class="sub-title">{{item.original_title}} {{item.year}}</text>
+                <view class="artists">导演: <block wx:for="item.directors" wx:key="id">{{item.name}}</block> </view>
+            </view>
+            
+            <view class="rating">
+                <text>{{item.rating.average}}</text>
+            </view>
+        </view>
+    </navigator>
+</template>
+
+<!-- 在北美电影排行的API中格式与普通的不同，这是渲染北美的电影数据
+ -->
+ <template name="item2">
+     <navigator url="../item/item?id={{item.subject.id}}">
+         <view class="item">
+             <image class="poster" src="{{item.subject.images.small}}" />
+             <view class="meta">
+                 <text class="title">{{item.subject.title}}</text>
+                 <text class="sub-title">{{item.subject.original_title}} {{item.subject.year}}</text>
+                 <view class="artists">
+                     <block wx:for="{{item.directors}}" wx:key="id">
+                         {{item.name}}
+                     </block>
+                 </view>
+             </view>
+             <view class="rating">
+                 <text>{{item.subject.rating.average}}</text>
+             </view>
+         </view>
+     </navigator>
+ </template>
+ 
+ <!-- 电影列表组建。供每一个列表使用
+  -->
+  <template name="movie-list">
+      <view class="list">
+          <template is="{{item.subject?'item2':'item1'}}" data="{{item}}" wx:for="{{movies}}" wx:key="id" />
+          <view class="tips">
+              <view wx:if="{{hasMore}}">
+                  <image src="/images/loading.gif" mode="aspectFill" />
+                  <text>玩了命的加载中...</text>
+              </view>
+              
+              <view wx:else>
+                  <text>没有更多内容了</text>
+              </view>
+          </view>
+      </view>
+  </template>
